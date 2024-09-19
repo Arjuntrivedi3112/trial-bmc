@@ -22,6 +22,10 @@ def chat():
         return jsonify({'reply': reply})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+        
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('', 'favicon.ico')
 
 def get_ai_response(message):
     api_key = os.getenv('OPENAI_API_KEY')

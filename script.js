@@ -28,8 +28,4 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             messages.innerHTML += `<p>AI: ${data.reply}</p>`;
         } catch (error) {
-            console.error('Error communicating with the server:', error);
-            messages.innerHTML += `<p>Error: Unable to get a response from the server.</p>`;
-        }
-    });
-});
+            console.error('Error communicating with the server:',

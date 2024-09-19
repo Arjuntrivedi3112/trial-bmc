@@ -9,6 +9,11 @@ app = Flask(__name__, static_folder='')
 def index():
     return send_from_directory('', 'index.html')
 
+# Route to serve favicon.ico
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('', 'favicon.ico')
+
 # API for AI Chat
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -22,10 +27,6 @@ def chat():
         return jsonify({'reply': reply})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-        
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory('', 'favicon.ico')
 
 def get_ai_response(message):
     api_key = os.getenv('OPENAI_API_KEY')
@@ -36,3 +37,17 @@ def get_ai_response(message):
     }
 
     data = {
+        'model': 'gpt-3.5-turbo',
+        'messages': [{'role': 'user', 'content': message}]
+    }
+
+    response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
+
+    if response.status_code != 200:
+        raise Exception('Failed to fetch response from OpenAI API')
+
+    response_data = response.json()
+    return response_data['choices'][0]['message']['content']
+
+if __name__ == '__main__':
+    app.run(debug=True)
